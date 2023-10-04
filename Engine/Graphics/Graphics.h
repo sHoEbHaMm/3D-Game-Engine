@@ -12,7 +12,7 @@
 
 #include <cstdint>
 #include <Engine/Results/Results.h>
-
+#include <Engine/Math/cMatrix_transformation.h>
 #if defined( EAE6320_PLATFORM_WINDOWS )
 	#include <Engine/Windows/Includes.h>
 #endif
@@ -57,7 +57,8 @@ namespace eae6320
 		// (i.e. as soon as SignalThatAllDataForAFrameHasBeenSubmitted() has been called)
 		void RenderFrame();
 		void SetBGColor(float color[4]);
-		void SubmitMeshEffect(cMesh* mesh1, cMesh* mesh2, cEffect* effect1, cEffect* effect2, size_t count);
+		void SubmitMeshEffect(cMesh* mesh1, cMesh* mesh2, cEffect* effect1, cEffect* effect2,  Math::cMatrix_transformation cameraTransform, 
+			Math::cMatrix_transformation cameraToProjectedTransform, Math::cMatrix_transformation go1Transform, Math::cMatrix_transformation go2Transform, size_t count);
 		// Initialize / Clean Up
 		//----------------------
 

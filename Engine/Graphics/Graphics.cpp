@@ -2,7 +2,7 @@
 //=========
 
 #include <Engine/Graphics/Graphics.h>
-
+#include<Engine/Math/cMatrix_transformation.h>
 #include <Engine/Graphics/cConstantBuffer.h>
 #include <Engine/Graphics/ConstantBufferFormats.h>
 #include <Engine/Graphics/cRenderState.h>
@@ -24,6 +24,7 @@
 #include <Engine/Graphics/swapBuffers.h>
 
 eae6320::Graphics::cConstantBuffer s_constantBuffer_frame(eae6320::Graphics::ConstantBufferTypes::Frame);
+eae6320::Graphics::cConstantBuffer s_constantBuffer_drawCall(eae6320::Graphics::ConstantBufferTypes::DrawCall);
 //eae6320::Graphics::cMesh* newMesh = new eae6320::Graphics::cMesh();
 //eae6320::Graphics::cEffect* newEffect = new eae6320::Graphics::cEffect();
 eae6320::Graphics::swapBuffers* bufferSwapper = new eae6320::Graphics::swapBuffers();
@@ -55,6 +56,7 @@ namespace
 		};
 
 		eae6320::Graphics::ConstantBufferFormats::sFrame constantData_frame;
+		eae6320::Graphics::ConstantBufferFormats::sDrawCall constantData_drawCall[20];
 		float bgColor[4];
 		sMeshEffectPair meshEffectPair[20];
 		size_t meshEffectPairCount = 20;
@@ -149,6 +151,8 @@ void eae6320::Graphics::RenderFrame()
 		//Draw the mesh
 		if (dataRequiredToRenderFrame->meshEffectPair[i].o_mesh != nullptr)
 		{
+			auto& constantData_drawCall = dataRequiredToRenderFrame->constantData_drawCall[i];
+			s_constantBuffer_drawCall.Update(&constantData_drawCall);
 			dataRequiredToRenderFrame->meshEffectPair[i].o_mesh->Draw();
 		}
 	}
@@ -186,9 +190,13 @@ void eae6320::Graphics::RenderFrame()
 
 }
 
-void eae6320::Graphics::SubmitMeshEffect(cMesh* mesh1, cMesh* mesh2, cEffect* effect1, cEffect* effect2, size_t count)
+void eae6320::Graphics::SubmitMeshEffect(cMesh* mesh1, cMesh* mesh2, cEffect* effect1, cEffect* effect2, Math::cMatrix_transformation cameraTransform, 
+	Math::cMatrix_transformation cameraToProjectedTransform, Math::cMatrix_transformation go1Transform, Math::cMatrix_transformation go2Transform, size_t count)
 {
 	EAE6320_ASSERT(s_dataBeingSubmittedByApplicationThread);
+
+		s_dataBeingSubmittedByApplicationThread->constantData_frame.g_transform_worldToCamera = Math::cMatrix_transformation::CreateWorldToCameraTransform(cameraTransform);
+		s_dataBeingSubmittedByApplicationThread->constantData_frame.g_transform_cameraToProjected = cameraToProjectedTransform;
 
 		s_dataBeingSubmittedByApplicationThread->meshEffectPair[0].o_mesh = mesh1;
 		if (s_dataBeingSubmittedByApplicationThread->meshEffectPair[0].o_mesh != nullptr)
@@ -202,6 +210,7 @@ void eae6320::Graphics::SubmitMeshEffect(cMesh* mesh1, cMesh* mesh2, cEffect* ef
 		{
 			s_dataBeingSubmittedByApplicationThread->meshEffectPair[0].o_effect->IncrementReferenceCount();
 		}
+		s_dataBeingSubmittedByApplicationThread->constantData_drawCall[0].g_transform_localToWorld = go1Transform;
 
 		s_dataBeingSubmittedByApplicationThread->meshEffectPair[1].o_mesh = mesh2;
 		if (s_dataBeingSubmittedByApplicationThread->meshEffectPair[1].o_mesh != nullptr)
@@ -214,6 +223,7 @@ void eae6320::Graphics::SubmitMeshEffect(cMesh* mesh1, cMesh* mesh2, cEffect* ef
 		{
 			s_dataBeingSubmittedByApplicationThread->meshEffectPair[1].o_effect->IncrementReferenceCount();
 		}
+		s_dataBeingSubmittedByApplicationThread->constantData_drawCall[1].g_transform_localToWorld = go2Transform;
 }
 
 eae6320::cResult eae6320::Graphics::Initialize(const sInitializationParameters& i_initializationParameters)
@@ -239,6 +249,20 @@ eae6320::cResult eae6320::Graphics::Initialize(const sInitializationParameters& 
 		else
 		{
 			EAE6320_ASSERTF(false, "Can't initialize Graphics without frame constant buffer");
+			return result;
+		}
+
+		if (result = s_constantBuffer_drawCall.Initialize())
+		{
+			// There is only a single frame constant buffer that is reused
+			// and so it can be bound at initialization time and never unbound
+			s_constantBuffer_drawCall.Bind(
+				// In our class both vertex and fragment shaders use per-frame constant data
+				static_cast<uint_fast8_t>(eShaderType::Vertex) | static_cast<uint_fast8_t>(eShaderType::Fragment));
+		}
+		else
+		{
+			EAE6320_ASSERTF(false, "Can't initialize Graphics without drawCall buffer");
 			return result;
 		}
 	}
@@ -354,6 +378,18 @@ eae6320::cResult eae6320::Graphics::CleanUp()
 			if (result)
 			{
 				result = result_constantBuffer_frame;
+			}
+		}
+	}
+
+	{
+		const auto result_constantBuffer_drawCall = s_constantBuffer_drawCall.CleanUp();
+		if (!result_constantBuffer_drawCall)
+		{
+			EAE6320_ASSERT(false);
+			if (result)
+			{
+				result = result_constantBuffer_drawCall;
 			}
 		}
 	}

@@ -15,7 +15,8 @@
 	#include "Resource Files/Resource.h"
 #endif
 #include <Engine/Graphics/VertexFormats.h>
-
+#include<Engine/Assets/cCamera.h>
+#include<Engine/Assets/cGameObject.h>
 // Class Declaration
 //==================
 
@@ -28,6 +29,7 @@ namespace eae6320
 		//=========================
 	public:
 		uint16_t index[3] = { 1,3,2 };
+		uint16_t newindex[3] = { 1,0,3 };
 		eae6320::Graphics::VertexFormats::sVertex_mesh vertexData[4] = { {0.0f,0.0f,0.0f},{1.0f,0.0f,0.0f},{1.0f,1.0f,0.0f},{0.0f,1.0f,0.0f} };
 
 		uint16_t index2[3] = { 1,4,3 };
@@ -36,10 +38,14 @@ namespace eae6320
 		float bg_color[4] = { 0.0f, 0.0f, 1.0f, 1.0f };
 		size_t meshEffectCount = 4;
 		int GameState;
-		eae6320::Graphics::cMesh* o_mesh;
-		eae6320::Graphics::cMesh* o_mesh2;
-		eae6320::Graphics::cEffect* o_effect;
-		eae6320::Graphics::cEffect* o_effect2;
+
+		eae6320::Assets::Camera camera;
+		eae6320::Math::cMatrix_transformation camTransform;
+		eae6320::Math::cMatrix_transformation camToProjectedTransform;
+		eae6320::Math::cMatrix_transformation go1Transform;
+		eae6320::Math::cMatrix_transformation go2Transform;
+		eae6320::Assets::cGameObject gameObjects[2];
+		eae6320::Graphics::cMesh* newMesh;
 		// Configuration
 		//--------------
 
@@ -86,6 +92,7 @@ namespace eae6320
 		void UpdateBasedOnInput() final;
 
 		void UpdateSimulationBasedOnInput();
+		void UpdateBasedOnTime(const float i_elapsedSecondCount_sinceLastUpdate);
 
 		// Initialize / Clean Up
 		//----------------------

@@ -11,16 +11,16 @@
 // Constant Buffers
 //=================
 
-cbuffer g_constantBuffer_frame : register( b0 )
-{
-	float4x4 g_transform_worldToCamera;
-	float4x4 g_transform_cameraToProjected;
-
-	float g_elapsedSecondCount_systemTime;
-	float g_elapsedSecondCount_simulationTime;
-	// For float4 alignment
-	float2 g_padding;
-};
+//cbuffer g_constantBuffer_frame : register( b0 )
+//{
+//	float4x4 g_transform_worldToCamera;
+//	float4x4 g_transform_cameraToProjected;
+//
+//	float g_elapsedSecondCount_systemTime;
+//	float g_elapsedSecondCount_simulationTime;
+//	// For float4 alignment
+//	float2 g_padding;
+//};
 
 // Entry Point
 //============
@@ -30,14 +30,14 @@ void main(
 	// Input
 	//======
 
-	in const float4 i_fragmentPosition : SV_POSITION,
+	in const vector4 i_fragmentPosition : SV_POSITION,
 
 	// Output
 	//=======
 
 	// Whatever color value is output from the fragment shader
 	// will determine the color of the corresponding pixel on the screen
-	out float4 o_color : SV_TARGET
+	out vector4 o_color : SV_TARGET
 
 )
 {
@@ -45,7 +45,7 @@ void main(
 	//float x = sin(g_elapsedSecondCount_simulationTime);
 	//float y = cos(g_elapsedSecondCount_simulationTime);
 	//float z = x/y;
-	o_color = float4(
+	o_color = vector4(
 		// RGB (color)
 		0, 1.0, 1.0,
 		// Alpha (opacity)
@@ -57,23 +57,23 @@ void main(
 // Constant Buffers
 //=================
 
-layout( std140, binding = 0 ) uniform g_constantBuffer_frame
-{
-	mat4 g_transform_worldToCamera;
-	mat4 g_transform_cameraToProjected;
-
-	float g_elapsedSecondCount_systemTime;
-	float g_elapsedSecondCount_simulationTime;
-	// For vec4 alignment
-	vec2 g_padding;
-};
+//layout( std140, binding = 0 ) uniform g_constantBuffer_frame
+//{
+//	mat4 g_transform_worldToCamera;
+//	mat4 g_transform_cameraToProjected;
+//
+//	float g_elapsedSecondCount_systemTime;
+//	float g_elapsedSecondCount_simulationTime;
+//	// For vec4 alignment
+//	vec2 g_padding;
+//};
 
 // Output
 //=======
 
 // Whatever color value is output from the fragment shader
 // will determine the color of the corresponding pixel on the screen
-out vec4 o_color;
+out vector4 o_color;
 
 // Entry Point
 //============
@@ -81,7 +81,7 @@ out vec4 o_color;
 void main()
 {
 	// Output solid white
-	o_color = vec4(
+	o_color = vector4(
 		// RGB (color)
 		0.0, 1.0, 1.0,
 		// Alpha (opacity)

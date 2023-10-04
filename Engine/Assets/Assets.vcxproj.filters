@@ -7,6 +7,8 @@
     <ClInclude Include="Windows\ExternalLibraries.win.h">
       <Filter>Windows</Filter>
     </ClInclude>
+    <ClInclude Include="cCamera.h" />
+    <ClInclude Include="cGameObject.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Windows">
@@ -15,6 +17,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Empty.cpp" />
+    <ClCompile Include="cCamera.cpp" />
+    <ClCompile Include="cGameObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cManager.inl" />

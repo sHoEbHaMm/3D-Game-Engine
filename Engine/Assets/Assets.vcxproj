@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="cCamera.h" />
+    <ClInclude Include="cGameObject.h" />
     <ClInclude Include="cHandle.h" />
     <ClInclude Include="cManager.h" />
     <ClInclude Include="ReferenceCountedAssets.h" />
@@ -34,14 +36,25 @@
     <ProjectReference Include="..\Concurrency\Concurrency.vcxproj">
       <Project>{60ff1b7f-04ec-40ae-bded-5fe1742da10e}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\Graphics\Graphics.vcxproj">
+      <Project>{aee39d8d-578f-4c81-9c77-64127bf168ed}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Logging\Logging.vcxproj">
       <Project>{a5c152ad-26a3-4835-bb10-ef292daf94ac}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Math\Math.vcxproj">
+      <Project>{999c3d5f-7f79-4bd7-ae21-92eeed0c5962}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Physics\Physics.vcxproj">
+      <Project>{30e6bb9f-138d-4b44-9733-869263f7bad5}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Results\Results.vcxproj">
       <Project>{5003f315-b5d5-48ab-ba3f-1cb0dec8c213}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="cCamera.cpp" />
+    <ClCompile Include="cGameObject.cpp" />
     <ClCompile Include="Empty.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -162,6 +162,9 @@
     <ProjectReference Include="..\Math\Math.vcxproj">
       <Project>{999c3d5f-7f79-4bd7-ae21-92eeed0c5962}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\Physics\Physics.vcxproj">
+      <Project>{30e6bb9f-138d-4b44-9733-869263f7bad5}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Platform\Platform.vcxproj">
       <Project>{7462d3a7-9936-442e-877c-89efda754596}</Project>
     </ProjectReference>
